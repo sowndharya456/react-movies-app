@@ -10,6 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
+import FormHelperText  from "@material-ui/core/FormHelperText";
 
 
 const customStyles={
@@ -38,10 +39,19 @@ class Header extends Component {
         super();
         this.state = {
             modalIsOpen: false,
-            value:0
+            value:0,
+            username:"",
+            usernameRequired:"dispNone"
         };
     }
-  
+    
+    inputUsernameChangeHandler=(e)=>{
+        this.setState({username : e.target.value})
+    }
+    loginClickHandler =() =>{
+        this.state.username ===""? this.setState({ usernameRequired :"dispBlock"}) : this.setState ({usernameRequired:"dispNone"})
+    }
+
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true
@@ -76,14 +86,17 @@ class Header extends Component {
                 <TabContainer>
                     <FormControl required>
                         <InputLabel htmlFor="username">Username</InputLabel>
-                        <Input id="username" type="text"/>
+                        <Input id="username" type="text" username={this.state.username} onChange={this.inputUsernameChangeHandler} />
+                        <FormHelperText className={this.state.usernameRequired}>
+                            <span className="red">required</span>
+                        </FormHelperText>
                         </FormControl><br/><br/>
                         <FormControl required>
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <Input id="password" type="password"/>
                         </FormControl>
                         <br/><br/>
-                        <Button variant="contained" color="primary" >Login</Button>
+                        <Button variant="contained" color="primary" onClick={this.loginClickHandler} >Login</Button>
                     </TabContainer>
 }
                 </Modal>
