@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Home.css";
 import Header from "../../common/header/Header";
 import { withStyles } from '@material-ui/core/styles'
-import moviesData from '../../common/movieData'; 
+import moviesData from '../../common/movieData';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -24,7 +24,19 @@ const styles = theme => ({
         flexWrap: 'nowrap',
         transform: 'translateZ(0)',
         width: '100%'
-    }
+    },
+    gridListMain:{
+        transform: 'translateZ(0)',
+       },
+       
+       formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 240,
+        maxWidth: 240
+     },
+     title: {
+        color: theme.palette.primary.light,
+     }
 });
 class Home extends Component {
     render() {
@@ -35,17 +47,37 @@ class Home extends Component {
                 <div className={classes.upcomingMoviesHeading}>
                     <span>Upcoming Movies</span>
                 </div>
-                <GridList cols="5" className={classes.gridListUpcomingMovies}>
+                <GridList cols={5} className={classes.gridListUpcomingMovies}>
                     {moviesData.map(movie => (
-                        
-                    <GridListTile key={movie.id}>
-                        <img src={movie.poster_url} alt={movie.title}/>
-                        <GridListTileBar title={movie.title}></GridListTileBar>
-                    </GridListTile>
+
+                        <GridListTile key={movie.id}>
+                            <img className="movie-poster" src={movie.poster_url} alt={movie.title} />
+                            <GridListTileBar title={movie.title}></GridListTileBar>
+                        </GridListTile>
 
                     ))}
                 </GridList>
-                </div>
+                <div className="flex-container">
+                   <div className="left">
+                        <GridList cellHeight={350} cols={4} className={classes.gridListMain} >
+                            {moviesData.map(movie => (
+                                <GridListTile  className="gridListReleasedMovies" key={"grid"+movie.id} >
+                                    <img className="movie-poster" src={movie.poster_url} alt={movie.title} />
+                                    <GridListTileBar title={movie.title}
+                                        subtitle={<span>Release Date: {new Date(movie.release_date).toDateString()}</span>}>
+
+                                    </GridListTileBar>
+
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    </div>
+                    
+                    <div className="right">
+
+                    </div>
+                    </div >
+            </div>
         );
     }
 }
