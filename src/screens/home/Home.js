@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from 'react-dom';
 import "./Home.css";
 import Header from "../../common/header/Header";
 import { withStyles } from '@material-ui/core/styles'
@@ -15,6 +16,7 @@ import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import artists from '../../common/artists';
 import Button from '@material-ui/core/Button';
+import Details from '../details/Details';
 
 
 const styles = theme => ({
@@ -58,7 +60,14 @@ class Home extends Component {
         }
     }
 
-
+   movieClickHandler = (movieId)=>{
+    
+    ReactDOM.render(
+    <Details movieId={movieId}></Details>,
+    document.getElementById('root')
+  );
+  
+   }
     movieNameChangeHandler = event => {
         this.setState({ movieName: event.target.value })
     }
@@ -91,7 +100,7 @@ class Home extends Component {
                     <div className="left">
                         <GridList cellHeight={350} cols={4} className={classes.gridListMain} >
                             {moviesData.map(movie => (
-                                <GridListTile className="gridListReleasedMovies" key={"grid" + movie.id} >
+                                <GridListTile className="gridListReleasedMovies" key={"grid" + movie.id} onClick={()=>this.movieClickHandler(movie.id)}>
                                     <img className="movie-poster" src={movie.poster_url} alt={movie.title} />
                                     <GridListTileBar title={movie.title}
                                         subtitle={<span>Release Date: {new Date(movie.release_date).toDateString()}</span>}>
@@ -113,7 +122,8 @@ class Home extends Component {
                                 </FormControl>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="movieName">Movie Name</InputLabel>
-                                    <Input id="movieName" type="text" onChangeHandler={this.movieNameChangeHandler}></Input>
+                                    <Input id="movieName" onChange={this.movieNameChangeHandler} />
+        
                                 </FormControl>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
