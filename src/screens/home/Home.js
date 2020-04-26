@@ -14,6 +14,7 @@ import genres from '../../common/genres';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import artists from '../../common/artists';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
@@ -154,6 +155,9 @@ class Home extends Component {
                                     </FormControl>
                                     <FormControl className={classes.formControl}>
                                     <TextField id="releaseDateEnd" label="Release Date End" type="date" defaultValue="" InputLabelProps={{shrink:true}}></TextField>
+                                    </FormControl>
+                                    <FormControl className={classes.formControl}>
+                                    <Button variant="contained" color="primary"  >APPLY</Button>
                                     </FormControl>
                             </CardContent>
                         </Card>
