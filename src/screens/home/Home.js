@@ -7,7 +7,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Card from '@material-ui/core/Card';
-import { CardContent, FormControl, Typography, MenuItem, Checkbox } from "@material-ui/core";
+import { CardContent, FormControl, Typography, MenuItem, Checkbox, TextField } from "@material-ui/core";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import genres from '../../common/genres';
@@ -149,6 +149,9 @@ class Home extends Component {
                                           }
                                       </Select>
                                 </FormControl>
+                               
+                                    <TextField id="releaseDateStart" label="Release Date Start" type="date" defaultValue="" InputLabelProps={{shrink:true}}></TextField>
+                               
                             </CardContent>
                         </Card>
                     </div>
