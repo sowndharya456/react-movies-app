@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
+import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import logo from '../../assets/logo.svg';
 import Modal from 'react-modal';
@@ -11,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import FormHelperText from "@material-ui/core/FormHelperText";
-
+import BookShow from '../../screens/bookshow/BookShow';
 
 const customStyles = {
     content: {
@@ -111,7 +112,7 @@ class Header extends Component {
             lastnameRequired: "dispNone",
             emailRequired: "dispNone",
             contactnoRequired: "dispNone",
-           
+
 
         });
     }
@@ -124,7 +125,10 @@ class Header extends Component {
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
-
+   
+    bookShowHandler = (e) => {
+        ReactDOM.render(<BookShow />, document.getElementById('root'));
+    }   
     render() {
 
         return (
@@ -134,6 +138,13 @@ class Header extends Component {
                     <div className="login-button">
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>Login</Button>
                     </div>
+                    {this.props.showBookShowButton === "true" ?
+                        <div className="bookshow-button">
+                            <Button variant="contained" color="primary" onClick={this.bookShowHandler}>
+                                Book Show
+                            </Button>
+                        </div>
+                        : ""}
                 </header>
                 <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login" style={customStyles} onRequestClose={this.closeModalHandler}>
                     <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler} >
@@ -185,7 +196,7 @@ class Header extends Component {
                                     <span className="red">required</span>
                                 </FormHelperText>
                             </FormControl><br /><br />
-                             <FormControl required>
+                            <FormControl required>
                                 <InputLabel htmlFor="registerPassword">Password</InputLabel>
                                 <Input id="registerPassword" type="password" registerpassword={this.state.registerPassword} onChange={this.inputRegisterPasswordChangeHandler} />
                                 <FormHelperText className={this.state.registerPasswordRequired}>
