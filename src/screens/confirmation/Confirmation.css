@@ -1,0 +1,32 @@
+.cardStyle {
+    width: 280px;
+    padding: 32px 64px 32px 64px;
+    margin: auto;
+    text-align: left;
+}
+.formControl {
+    width: 240px;
+}
+
+.back {
+    cursor: pointer;
+}
+.coupon-container{
+  display:flex;
+ flex-direction: row;
+ justify-content: space-between;
+}
+
+.bookConfirm
+    {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    .marginTop16 {
+        margin-top: 16px;
+    }
+
+    .marginApply {
+        margin: 16px 0px 0px 16px;
+      }
