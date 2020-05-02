@@ -60,7 +60,9 @@ class Home extends Component {
             genres: [],
             artists: [],
             genresList:[],
-            artistsList :[]
+            artistsList :[],
+            releaseDateStart: "",
+            releaseDateEnd: ""
         }
     }
 
@@ -81,6 +83,13 @@ class Home extends Component {
     }
     artistSelectHandler = event => {
         this.setState({ artists: event.target.value })
+    }
+    releaseDateStartHandler = event => {
+        this.setState({ releaseDateStart: event.target.value });
+    }
+
+    releaseDateEndHandler = event => {
+        this.setState({ releaseDateEnd: event.target.value });
     }
     componentWillMount() {
         let data = null;
@@ -149,6 +158,30 @@ class Home extends Component {
         if (this.state.genres.length > 0) {
             queryString += "&genres=" + this.state.genres.toString();
         }
+        if (this.state.artists.length > 0) {
+            queryString += "&artists=" + this.state.artists.toString();
+        }
+        if (this.state.releaseDateStart !== "") {
+            queryString += "&start_date=" + this.state.releaseDateStart;
+        }
+        if (this.state.releaseDateEnd !== "") {
+            queryString += "&end_date=" + this.state.releaseDateEnd;
+        }
+
+        let that = this;
+        let dataFilter = null;
+        let xhrFilter = new XMLHttpRequest();
+        xhrFilter.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    releasedMovies: JSON.parse(this.responseText).movies
+                });
+            }
+        });
+
+        xhrFilter.open("GET", this.props.baseUrl + "movies" + encodeURI(queryString));
+        xhrFilter.setRequestHeader("Cache-Control", "no-cache");
+        xhrFilter.send(dataFilter);
     }
 
     render() {
@@ -235,10 +268,10 @@ class Home extends Component {
                                       </Select>
                                 </FormControl>
                                   <FormControl className={classes.formControl}>
-                                    <TextField id="releaseDateStart" label="Release Date Start" type="date" defaultValue="" InputLabelProps={{shrink:true}}></TextField>
+                                    <TextField id="releaseDateStart" label="Release Date Start" type="date" defaultValue="" InputLabelProps={{shrink:true}}  onChange={this.releaseDateStartHandler}></TextField>
                                     </FormControl>
                                     <FormControl className={classes.formControl}>
-                                    <TextField id="releaseDateEnd" label="Release Date End" type="date" defaultValue="" InputLabelProps={{shrink:true}}></TextField>
+                                    <TextField id="releaseDateEnd" label="Release Date End" type="date" defaultValue="" InputLabelProps={{shrink:true}} onChange={this.releaseDateEndHandler}></TextField>
                                     </FormControl>
                                     <FormControl className={classes.formControl}>
                                     <Button onClick={() => this.filterApplyHandler()} variant="contained" color="primary">
