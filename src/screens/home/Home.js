@@ -11,10 +11,10 @@ import Card from '@material-ui/core/Card';
 import { CardContent, FormControl, Typography, MenuItem, Checkbox, TextField } from "@material-ui/core";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import genres from '../../common/genres';
+//import genres from '../../common/genres';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
-import artists from '../../common/artists';
+//import artists from '../../common/artists';
 import Button from '@material-ui/core/Button';
 import Details from '../details/Details';
 
@@ -58,7 +58,9 @@ class Home extends Component {
             upcomingMovies: [],
             releasedMovies :[],
             genres: [],
-            artists: []
+            artists: [],
+            genresList:[],
+            artistsList :[]
         }
     }
 
@@ -110,6 +112,43 @@ class Home extends Component {
         xhrReleased.open("GET", this.props.baseUrl + "movies?status=RELEASED");
         xhrReleased.setRequestHeader("Cache-Control", "no-cache");
         xhrReleased.send(dataReleased);
+
+        let dataGenres = null;
+        let xhrGenres = new XMLHttpRequest();
+        xhrGenres.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    genresList: JSON.parse(this.responseText).genres
+                });
+            }
+        });
+
+        xhrGenres.open("GET", this.props.baseUrl + "genres");
+        xhrGenres.setRequestHeader("Cache-Control", "no-cache");
+        xhrGenres.send(dataGenres);
+
+        let dataArtists = null;
+        let xhrArtists = new XMLHttpRequest();
+        xhrArtists.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    artistsList: JSON.parse(this.responseText).artists
+                });
+            }
+        });
+
+        xhrArtists.open("GET", this.props.baseUrl + "artists");
+        xhrArtists.setRequestHeader("Cache-Control", "no-cache");
+        xhrArtists.send(dataArtists);
+    }
+    filterApplyHandler = () => {
+        let queryString = "?status=RELEASED";
+        if (this.state.movieName !== "") {
+            queryString += "&title=" + this.state.movieName;
+        }
+        if (this.state.genres.length > 0) {
+            queryString += "&genres=" + this.state.genres.toString();
+        }
     }
 
     render() {
@@ -168,10 +207,10 @@ class Home extends Component {
                                         value={this.state.genres}
                                         onChange={this.genreSelectHandler}>
                                         <MenuItem value='0'>None </MenuItem>
-                                        {genres.map(genre => (
-                                            <MenuItem key={genre.id} value={genre.name}>
-                                                <Checkbox checked={this.state.genres.indexOf(genre.name) > -1}></Checkbox>
-                                                <ListItemText primary={genre.name}></ListItemText>
+                                        {this.state.genresList.map(genre => (
+                                            <MenuItem key={genre.id} value={genre.genre}>
+                                                <Checkbox checked={this.state.genres.indexOf(genre.genre) > -1} />
+                                                <ListItemText primary={genre.genre} />
                                             </MenuItem>
                                         ))
                                         }
@@ -186,7 +225,7 @@ class Home extends Component {
                                       onChange={this.artistSelectHandler}>
                                           <MenuItem value='0'>None</MenuItem>
                                           {
-                                              artists.map(artist =>(
+                                              this.state.artistsList.map(artist =>(
                                                   <MenuItem key={artist.id} value={artist.first_name+" "+artist.last_name}>
                                                       <Checkbox checked={this.state.artists.indexOf(artist.name)>-1}></Checkbox>
                                                     <ListItemText primary={artist.first_name+" "+artist.last_name}></ListItemText>
@@ -202,7 +241,8 @@ class Home extends Component {
                                     <TextField id="releaseDateEnd" label="Release Date End" type="date" defaultValue="" InputLabelProps={{shrink:true}}></TextField>
                                     </FormControl>
                                     <FormControl className={classes.formControl}>
-                                    <Button variant="contained" color="primary"  >APPLY</Button>
+                                    <Button onClick={() => this.filterApplyHandler()} variant="contained" color="primary">
+                                    APPLY</Button>
                                     </FormControl>
                             </CardContent>
                         </Card>
