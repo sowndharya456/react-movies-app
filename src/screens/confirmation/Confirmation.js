@@ -52,7 +52,7 @@ class Confirmation extends Component {
 
         return (
             <div>
-                <Header></Header>
+                <Header baseUrl={this.props.baseUrl}></Header>
                 <div className="bookConfirm marginTop16">
                     <Typography className="back" onClick={this.backToDetailsHandler}><span>&#60;Back to Movie Details</span></Typography>
 

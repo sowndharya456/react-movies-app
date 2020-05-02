@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Home from "./screens/home/Home";
+//import Home from "./screens/home/Home";
 import 'typeface-roboto';
+import Controller from'./screens/Controller';
 
 ReactDOM.render(
-  <Home></Home>,
+  <Controller></Controller>,
   document.getElementById('root')
 );
 

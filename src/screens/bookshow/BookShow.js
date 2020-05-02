@@ -67,7 +67,7 @@ class BookShow extends Component {
     render() {
         return (
             <div>
-                <Header />
+                <Header baseUrl={this.props.baseUrl}/>
                 <div className="bookShow">
                     <Typography className="back" onClick={this.backToDetailsHandler}><span>&#60;Back to Movie Details</span></Typography>
                

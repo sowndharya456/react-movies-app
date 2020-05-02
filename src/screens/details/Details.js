@@ -93,7 +93,7 @@ class Details extends Component {
             }
         }
         return (<div className='details'>
-            <Header showBookShowButton="true"/>
+            <Header showBookShowButton="true" baseUrl={this.props.baseUrl}/>
             <div className="back" onClick={this.backToHomeHandler}>
                 <Typography>&#60;Back to Home</Typography>
 
