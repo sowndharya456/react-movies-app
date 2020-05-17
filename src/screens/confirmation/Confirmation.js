@@ -20,6 +20,7 @@ class Confirmation extends Component {
             open: false,
             couponCode: "",
             totalPrice: 0,
+            bookingId: "",
             originalTotalPrice: 0.
         }
     }
@@ -27,7 +28,7 @@ class Confirmation extends Component {
 
     componentDidMount() {
         let currentState = this.state;
-        currentState.totalPrice = currentState.originalTotalPrice = parseInt(this.props.bookingSummary.unitPrice, 10) * parseInt(this.props.bookingSummary.tickets, 10);
+        currentState.totalPrice = currentState.originalTotalPrice = parseInt(this.props.location.bookingSummary.unitPrice, 10) * parseInt(this.props.location.bookingSummary.tickets.length, 10);
         this.setState({ state: currentState });
     }
 
@@ -38,7 +39,59 @@ class Confirmation extends Component {
         this.setState({couponCode:e.target.value});
     }
     confirmBookingHandler =()=>{
+        let data = JSON.stringify({
+            "customerUuid": sessionStorage.getItem('uuid'),
+            "bookingRequest": {
+              "coupon_code": this.state.couponCode,
+              "show_id": this.props.location.bookingSummary.showId,
+              "tickets": [
+                this.props.location.bookingSummary.tickets.toString()
+              ]
+            }
+          });
+      
+          let that = this;
+          let xhr = new XMLHttpRequest();
+      
+          xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+              that.setState({ bookingId: JSON.parse(this.responseText).reference_number });
+            }
+          });
+      
+          xhr.open("POST", this.props.baseUrl + "bookings");
+          xhr.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem('access-token'));
+          xhr.setRequestHeader("Cache-Control", "no-cache");
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send(data);
         this.setState({open:true})
+    }
+    couponApplyHandler = () => {
+        console.log(this.state.couponCode);
+        let that = this;
+        let data = null;
+        let xhr = new XMLHttpRequest();
+    
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            let currentState = that.state;
+    
+            let discountValue = JSON.parse(this.responseText).value;
+            if (discountValue !== undefined && discountValue > 0) {
+              currentState.totalPrice = that.state.originalTotalPrice - ((that.state.originalTotalPrice * discountValue) / 100);
+              that.setState({ currentState });
+            } else {
+              currentState.totalPrice = that.state.originalTotalPrice;
+              that.setState({ currentState });
+            }
+          }
+        });
+    
+        xhr.open("GET", this.props.baseUrl + "coupons/" + this.state.couponCode);
+        xhr.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem('access-token'));
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
     }
     handleClick = () => {
         this.setState({ open: true });
@@ -48,7 +101,7 @@ class Confirmation extends Component {
         this.setState({ open: false });
       };
     render() {
-        //const { classes } = this.props;
+        const { classes } = this.props;
 
         return (
             <div>
@@ -63,7 +116,7 @@ class Confirmation extends Component {
                             </Typography><br /><br />
                             <div className="coupon-container">
                                 <div className="confirmLeft">
-                                    <Typography>Location:</Typography>
+                                <Typography>Theatre:</Typography>
                                 </div>
                                 <div><Typography>
                                     {this.props.bookingSummary.location}
@@ -83,24 +136,30 @@ class Confirmation extends Component {
                             <br></br>
                             <div className="coupon-container">
                                 <div className="confirmLeft">
-                                    <Typography>Show Date:</Typography>
+                                <Typography>Language:</Typography>>
                                 </div>
-                                <div><Typography>
-                                    {this.props.bookingSummary.showDate}
-                                </Typography>
+                                <div><Typography>{this.props.location.bookingSummary.language}</Typography>
                                 </div>
                             </div>
                             <br></br>
                             <div className="coupon-container">
                                 <div className="confirmLeft">
-                                    <Typography>Show Time:</Typography>
+                                <Typography>Show Date:</Typography>
                                 </div>
-                                <div><Typography>
-                                    {this.props.bookingSummary.showTime}
-                                </Typography>
+                                <div> <Typography>{this.props.location.bookingSummary.showDate}</Typography>
                                 </div>
                             </div>
                             <br></br>
+                            <div className="coupon-container">
+                  <div className="confirmLeft">
+                    <Typography>Tickets:</Typography>
+                  </div>
+                  <div>
+                 
+                    <Typography>{this.props.location.bookingSummary.tickets.toString()}</Typography>
+                  </div>
+                </div>
+                <br />
                             <div className="coupon-container">
                                 <FormControl required className="formControl">
                                     <InputLabel htmlFor="couponCode">Coupon Code</InputLabel>
@@ -108,7 +167,7 @@ class Confirmation extends Component {
 
                                 </FormControl>
                                 <div className="marginApply">
-                                <Button variant="contained" color="primary">APPLY</Button>
+                                <Button variant="contained" color="primary" onClick={this.couponApplyHandler.bind(this)}>APPLY</Button>
                                 </div>
                             </div><br />
                             <div className="coupon-container">
@@ -116,8 +175,7 @@ class Confirmation extends Component {
                                     <Typography>Total Price</Typography>
                                 </div>
                                 <div>
-                                    <Typography>{this.props.bookingSummary.unitPrice * this.props.bookingSummary.tickets}</Typography>
-                                </div>
+                                <Typography>{this.props.location.bookingSummary.theatre}</Typography>  </div>
                                 <Snackbar
                                  anchorOrigin={{
                                     vertical: 'top',

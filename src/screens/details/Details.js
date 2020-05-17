@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Header from '../../common/header/Header';
-import moviesData from '../../common/movieData';
 import Typography from '@material-ui/core/Typography';
 import './Details.css';
 import Home from '../../screens/home/Home';
@@ -16,7 +15,11 @@ class Details extends Component {
     constructor() {
         super();
         this.state = {
-            movie: {},
+            movie: {
+                genres: [],
+                trailer_url: "",
+                artists: []
+            },
             starIcons: [
                 {
                    id: 1,
@@ -47,11 +50,21 @@ class Details extends Component {
         }
     }
     componentDidMount() {
-        let currentState = this.state;
-        currentState.movie = moviesData.filter((mov) => {
-            return mov.id === this.props.movieId
-        })[0];
-        this.setState({ currentState });
+        let that = this;
+        let dataMovie = null;
+        let xhrMovie = new XMLHttpRequest();
+        xhrMovie.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                that.setState({
+                    movie: JSON.parse(this.responseText)
+                });
+            }
+        });
+
+       
+        xhrMovie.open("GET", this.props.baseUrl + "movies/" + this.props.match.params.id);
+        xhrMovie.setRequestHeader("Cache-Control", "no-cache");
+        xhrMovie.send(dataMovie);
    
     }
     backToHomeHandler = () =>{

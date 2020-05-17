@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import "./Home.css";
 import Header from "../../common/header/Header";
 import { withStyles } from '@material-ui/core/styles'
@@ -16,7 +16,7 @@ import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 //import artists from '../../common/artists';
 import Button from '@material-ui/core/Button';
-import Details from '../details/Details';
+//import Details from '../details/Details';
 
 
 const styles = theme => ({
@@ -68,10 +68,8 @@ class Home extends Component {
 
    movieClickHandler = (movieId)=>{
     
-    ReactDOM.render(
-    <Details movieId={movieId}></Details>,
-    document.getElementById('root')
-  );
+    this.props.history.push('/movie/' + movieId);
+  
   
    }
     movieNameChangeHandler = event => {
